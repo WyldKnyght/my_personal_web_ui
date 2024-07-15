@@ -1,0 +1,193 @@
+m:\dev_env\my_personal_web_ui
+├── .admin
+│   └── create_folder_structure.py
+├── .gitignore
+├── LICENSE
+├── README.md
+├── css
+│   ├── NotoSans
+│   │   ├── NotoSans-Black.woff
+│   │   ├── NotoSans-Black.woff2
+│   │   ├── NotoSans-BlackItalic.woff
+│   │   ├── NotoSans-BlackItalic.woff2
+│   │   ├── NotoSans-Bold.woff
+│   │   ├── NotoSans-Bold.woff2
+│   │   ├── NotoSans-BoldItalic.woff
+│   │   ├── NotoSans-BoldItalic.woff2
+│   │   ├── NotoSans-ExtraBold.woff
+│   │   ├── NotoSans-ExtraBold.woff2
+│   │   ├── NotoSans-ExtraBoldItalic.woff
+│   │   ├── NotoSans-ExtraBoldItalic.woff2
+│   │   ├── NotoSans-ExtraLight.woff
+│   │   ├── NotoSans-ExtraLight.woff2
+│   │   ├── NotoSans-ExtraLightItalic.woff
+│   │   ├── NotoSans-ExtraLightItalic.woff2
+│   │   ├── NotoSans-Italic.woff
+│   │   ├── NotoSans-Italic.woff2
+│   │   ├── NotoSans-Light.woff
+│   │   ├── NotoSans-Light.woff2
+│   │   ├── NotoSans-LightItalic.woff
+│   │   ├── NotoSans-LightItalic.woff2
+│   │   ├── NotoSans-Medium.woff
+│   │   ├── NotoSans-Medium.woff2
+│   │   ├── NotoSans-MediumItalic.woff
+│   │   ├── NotoSans-MediumItalic.woff2
+│   │   ├── NotoSans-Regular.woff
+│   │   ├── NotoSans-Regular.woff2
+│   │   ├── NotoSans-SemiBold.woff
+│   │   ├── NotoSans-SemiBold.woff2
+│   │   ├── NotoSans-SemiBoldItalic.woff
+│   │   ├── NotoSans-SemiBoldItalic.woff2
+│   │   ├── NotoSans-Thin.woff
+│   │   ├── NotoSans-Thin.woff2
+│   │   ├── NotoSans-ThinItalic.woff
+│   │   ├── NotoSans-ThinItalic.woff2
+│   │   └── stylesheet.css
+│   ├── chat_style-TheEncrypted777.css
+│   ├── chat_style-cai-chat-square.css
+│   ├── chat_style-cai-chat.css
+│   ├── chat_style-messenger.css
+│   ├── chat_style-wpp.css
+│   ├── highlightjs
+│   │   ├── github-dark.min.css
+│   │   └── highlightjs-copy.min.css
+│   ├── html_instruct_style.css
+│   ├── html_readable_style.css
+│   ├── katex
+│   │   ├── fonts
+│   │   │   ├── KaTeX_AMS-Regular.ttf
+│   │   │   ├── KaTeX_AMS-Regular.woff
+│   │   │   ├── KaTeX_AMS-Regular.woff2
+│   │   │   ├── KaTeX_Caligraphic-Bold.ttf
+│   │   │   ├── KaTeX_Caligraphic-Bold.woff
+│   │   │   ├── KaTeX_Caligraphic-Bold.woff2
+│   │   │   ├── KaTeX_Caligraphic-Regular.ttf
+│   │   │   ├── KaTeX_Caligraphic-Regular.woff
+│   │   │   ├── KaTeX_Caligraphic-Regular.woff2
+│   │   │   ├── KaTeX_Fraktur-Bold.ttf
+│   │   │   ├── KaTeX_Fraktur-Bold.woff
+│   │   │   ├── KaTeX_Fraktur-Bold.woff2
+│   │   │   ├── KaTeX_Fraktur-Regular.ttf
+│   │   │   ├── KaTeX_Fraktur-Regular.woff
+│   │   │   ├── KaTeX_Fraktur-Regular.woff2
+│   │   │   ├── KaTeX_Main-Bold.ttf
+│   │   │   ├── KaTeX_Main-Bold.woff
+│   │   │   ├── KaTeX_Main-Bold.woff2
+│   │   │   ├── KaTeX_Main-BoldItalic.ttf
+│   │   │   ├── KaTeX_Main-BoldItalic.woff
+│   │   │   ├── KaTeX_Main-BoldItalic.woff2
+│   │   │   ├── KaTeX_Main-Italic.ttf
+│   │   │   ├── KaTeX_Main-Italic.woff
+│   │   │   ├── KaTeX_Main-Italic.woff2
+│   │   │   ├── KaTeX_Main-Regular.ttf
+│   │   │   ├── KaTeX_Main-Regular.woff
+│   │   │   ├── KaTeX_Main-Regular.woff2
+│   │   │   ├── KaTeX_Math-BoldItalic.ttf
+│   │   │   ├── KaTeX_Math-BoldItalic.woff
+│   │   │   ├── KaTeX_Math-BoldItalic.woff2
+│   │   │   ├── KaTeX_Math-Italic.ttf
+│   │   │   ├── KaTeX_Math-Italic.woff
+│   │   │   ├── KaTeX_Math-Italic.woff2
+│   │   │   ├── KaTeX_SansSerif-Bold.ttf
+│   │   │   ├── KaTeX_SansSerif-Bold.woff
+│   │   │   ├── KaTeX_SansSerif-Bold.woff2
+│   │   │   ├── KaTeX_SansSerif-Italic.ttf
+│   │   │   ├── KaTeX_SansSerif-Italic.woff
+│   │   │   ├── KaTeX_SansSerif-Italic.woff2
+│   │   │   ├── KaTeX_SansSerif-Regular.ttf
+│   │   │   ├── KaTeX_SansSerif-Regular.woff
+│   │   │   ├── KaTeX_SansSerif-Regular.woff2
+│   │   │   ├── KaTeX_Script-Regular.ttf
+│   │   │   ├── KaTeX_Script-Regular.woff
+│   │   │   ├── KaTeX_Script-Regular.woff2
+│   │   │   ├── KaTeX_Size1-Regular.ttf
+│   │   │   ├── KaTeX_Size1-Regular.woff
+│   │   │   ├── KaTeX_Size1-Regular.woff2
+│   │   │   ├── KaTeX_Size2-Regular.ttf
+│   │   │   ├── KaTeX_Size2-Regular.woff
+│   │   │   ├── KaTeX_Size2-Regular.woff2
+│   │   │   ├── KaTeX_Size3-Regular.ttf
+│   │   │   ├── KaTeX_Size3-Regular.woff
+│   │   │   ├── KaTeX_Size3-Regular.woff2
+│   │   │   ├── KaTeX_Size4-Regular.ttf
+│   │   │   ├── KaTeX_Size4-Regular.woff
+│   │   │   ├── KaTeX_Size4-Regular.woff2
+│   │   │   ├── KaTeX_Typewriter-Regular.ttf
+│   │   │   ├── KaTeX_Typewriter-Regular.woff
+│   │   │   └── KaTeX_Typewriter-Regular.woff2
+│   │   └── katex.min.css
+│   └── main.css
+├── loras
+│   └── place-your-loras-here.txt
+├── models
+│   └── codellama-13b.Q4_K_M.gguf
+├── presets
+│   ├── Big O.yaml
+│   ├── Contrastive Search.yaml
+│   ├── Debug-deterministic.yaml
+│   ├── Divine Intellect.yaml
+│   ├── LLaMA-Precise.yaml
+│   ├── Midnight Enigma.yaml
+│   ├── Null preset.yaml
+│   ├── Shortwave.yaml
+│   ├── Yara.yaml
+│   ├── min_p.yaml
+│   └── simple-1.yaml
+├── prompts
+│   ├── Alpaca-with-Input.txt
+│   └── QA.txt
+├── src
+│   ├── chat_logic
+│   │   ├── common_handlers
+│   │   │   ├── chatbot_wrapper.py
+│   │   │   ├── get_available_chat_styles.py
+│   │   │   ├── start_new_chat.py
+│   │   │   └── ui_chat_utils.py
+│   │   ├── prompt_handlers
+│   │   │   ├── generate_chat_prompt.py
+│   │   │   ├── get_available_prompts.py
+│   │   │   ├── get_generation_prompt.py
+│   │   │   ├── get_max_prompt_length.py
+│   │   │   ├── load_prompt.py
+│   │   │   └── print_prompt.py
+│   │   └── reply_handlers
+│   │       ├── generate_chat_reply.py
+│   │       ├── generate_chat_reply_wrapper.py
+│   │       └── generate_reply.py
+│   ├── configs
+│   │   ├── arguments.py
+│   │   └── variables.py
+│   ├── main.py
+│   ├── user_interface
+│   │   ├── event_handlers
+│   │   │   ├── ui_chat_events.py
+│   │   │   ├── ui_file_saving_events.py
+│   │   │   ├── ui_model_menu_events.py
+│   │   │   ├── ui_paramaters_events.py
+│   │   │   ├── ui_settings_events.py
+│   │   │   └── ui_training_events.py
+│   │   ├── ui_chat.py
+│   │   ├── ui_file_saving.py
+│   │   ├── ui_model_menu.py
+│   │   ├── ui_parameters.py
+│   │   ├── ui_settings.py
+│   │   └── ui_training.py
+│   └── utils
+│       ├── continue_generation.py
+│       ├── extension_handler.py
+│       ├── file_manager.py
+│       ├── history_handlers.py
+│       ├── logging_colors.py
+│       ├── natural_keys.py
+│       ├── stopping_event_handler.py
+│       └── update_chat_display.py
+└── training
+    ├── datasets
+    │   └── put-trainer-datasets-here.txt
+    └── formats
+        ├── alpaca-chatbot-format.json
+        ├── alpaca-format.json
+        ├── llama2-chat-format.json
+        └── vicuna-format.json
+
+Script last modified: 2024-07-15 12:57:45
