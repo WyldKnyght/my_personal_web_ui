@@ -1,6 +1,7 @@
+# src/user_interface/ui_chat.py
+from pathlib import Path
 import gradio as gr
-from chat_logic.common_handlers.get_available_chat_styles import get_available_chat_styles
-from chat_logic.prompt_handlers.get_available_prompts import get_available_prompts
+from configs import variables
 
 def create_ui():
     with gr.Tab('Chat', elem_id='chat-tab'):
@@ -22,9 +23,12 @@ def create_ui():
                 
                 with gr.Row():
                     mode_selector = gr.Radio(choices=['chat', 'chat-instruct', 'instruct'], label='Mode', value='chat', elem_id='mode-selector')
-                    chat_style = gr.Dropdown(choices=get_available_chat_styles(), label='Chat style', value='cai-chat', elem_id='chat-style')
+                    chat_style = gr.Dropdown(choices=['cai-chat', 'llama-2-chat'], label='Chat style', value='cai-chat', elem_id='chat-style')
 
             with gr.Column(scale=1):
+                model_selector = gr.Dropdown(choices=list_gguf_models(), label='Model', value=variables.get_setting('model_name'), elem_id='model-selector')
+                load_model_btn = gr.Button('Load Model', elem_id='load-model-btn')
+
                 with gr.Row():
                     new_chat_btn = gr.Button('New chat', elem_id='new-chat-btn')
                 
@@ -34,10 +38,6 @@ def create_ui():
                 with gr.Row():
                     rename_chat_btn = gr.Button('Rename', elem_classes='refresh-button', elem_id='rename-chat-btn')
                     delete_chat_btn = gr.Button('🗑️', elem_classes='refresh-button', elem_id='delete-chat-btn')
-                
-                gr.Markdown("Prompts")
-                prompt_menu = gr.Dropdown(choices=get_available_prompts(), value='None', label='Prompt', elem_classes='slim-dropdown', elem_id='prompt-menu')
-                refresh_prompts_btn = gr.Button('🔄', elem_classes='refresh-button', elem_id='refresh-prompts-btn')
 
     chat_history_json = gr.JSON(visible=False, elem_id='chat-history-json')
 
@@ -51,11 +51,15 @@ def create_ui():
         'remove_last_btn': remove_last_btn,
         'mode_selector': mode_selector,
         'chat_style': chat_style,
+        'model_selector': model_selector,
+        'load_model_btn': load_model_btn,
         'new_chat_btn': new_chat_btn,
         'chat_history': chat_history,
         'rename_chat_btn': rename_chat_btn,
         'delete_chat_btn': delete_chat_btn,
-        'prompt_menu': prompt_menu,
-        'refresh_prompts_btn': refresh_prompts_btn,
         'chat_history_json': chat_history_json
     }
+
+def list_gguf_models():
+    models_dir = Path(variables.get_setting('models_directory', 'models'))
+    return [f.stem for f in models_dir.glob('*.gguf') if f.is_file()]

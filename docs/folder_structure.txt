@@ -117,10 +117,9 @@ m:\dev_env\my_personal_web_ui
 │   │   │   └── KaTeX_Typewriter-Regular.woff2
 │   │   └── katex.min.css
 │   └── main.css
-├── loras
-│   └── place-your-loras-here.txt
 ├── models
-│   └── codellama-13b.Q4_K_M.gguf
+│   ├── codellama-13b.Q4_K_M.gguf
+│   └── codellama-7b-python.Q4_K_M.gguf
 ├── presets
 │   ├── Big O.yaml
 │   ├── Contrastive Search.yaml
@@ -136,58 +135,46 @@ m:\dev_env\my_personal_web_ui
 ├── prompts
 │   ├── Alpaca-with-Input.txt
 │   └── QA.txt
-├── src
-│   ├── chat_logic
-│   │   ├── common_handlers
-│   │   │   ├── chatbot_wrapper.py
-│   │   │   ├── get_available_chat_styles.py
-│   │   │   ├── start_new_chat.py
-│   │   │   └── ui_chat_utils.py
-│   │   ├── prompt_handlers
-│   │   │   ├── generate_chat_prompt.py
-│   │   │   ├── get_available_prompts.py
-│   │   │   ├── get_generation_prompt.py
-│   │   │   ├── get_max_prompt_length.py
-│   │   │   ├── load_prompt.py
-│   │   │   └── print_prompt.py
-│   │   └── reply_handlers
-│   │       ├── generate_chat_reply.py
-│   │       ├── generate_chat_reply_wrapper.py
-│   │       └── generate_reply.py
-│   ├── configs
-│   │   ├── arguments.py
-│   │   └── variables.py
-│   ├── main.py
-│   ├── user_interface
-│   │   ├── event_handlers
-│   │   │   ├── ui_chat_events.py
-│   │   │   ├── ui_file_saving_events.py
-│   │   │   ├── ui_model_menu_events.py
-│   │   │   ├── ui_paramaters_events.py
-│   │   │   ├── ui_settings_events.py
-│   │   │   └── ui_training_events.py
-│   │   ├── ui_chat.py
-│   │   ├── ui_file_saving.py
-│   │   ├── ui_model_menu.py
-│   │   ├── ui_parameters.py
-│   │   ├── ui_settings.py
-│   │   └── ui_training.py
-│   └── utils
-│       ├── continue_generation.py
-│       ├── extension_handler.py
-│       ├── file_manager.py
-│       ├── history_handlers.py
-│       ├── logging_colors.py
-│       ├── natural_keys.py
-│       ├── stopping_event_handler.py
-│       └── update_chat_display.py
-└── training
-    ├── datasets
-    │   └── put-trainer-datasets-here.txt
-    └── formats
-        ├── alpaca-chatbot-format.json
-        ├── alpaca-format.json
-        ├── llama2-chat-format.json
-        └── vicuna-format.json
+└── src
+    ├── chat_logic
+    │   ├── common_handlers
+    │   │   ├── __init__.py
+    │   │   ├── chat_utils.py
+    │   │   ├── load_instuction_templates.py
+    │   │   ├── start_new_chat.py
+    │   │   └── update_chat_display.py
+    │   ├── prompt_handlers
+    │   │   ├── __init__.py
+    │   │   └── prompt_generation.py
+    │   └── reply_handlers
+    │       ├── __init__.py
+    │       └── reply_generation.py
+    ├── configs
+    │   ├── __init__.py
+    │   └── variables.py
+    ├── main.py
+    ├── model_handlers
+    │   ├── __init__.py
+    │   ├── cache_utils.py
+    │   ├── callbacks.py
+    │   ├── get_max_prompt_length.py
+    │   ├── get_model_metadata.py
+    │   ├── llama_cpp_python_hijack.py
+    │   ├── llamacpp_loader.py
+    │   ├── llamacpp_model.py
+    │   ├── load_model.py
+    │   └── metadata_gguf.py
+    ├── user_interface
+    │   ├── __init__.py
+    │   ├── event_handlers
+    │   │   ├── __init__.py
+    │   │   └── ui_chat_events.py
+    │   └── ui_chat.py
+    └── utils
+        ├── __init__.py
+        ├── file_manager.py
+        ├── history_handlers.py
+        ├── logging_colors.py
+        └── stopping_event_handler.py
 
-Script last modified: 2024-07-15 12:57:45
+Script last modified: 2024-07-16 16:38:14

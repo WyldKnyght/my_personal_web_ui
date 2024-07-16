@@ -1,10 +1,11 @@
+# src\utils\stopping_event_handler.py
 import pprint
 
 from functools import partial
 from jinja2.sandbox import ImmutableSandboxedEnvironment
-from chat_logic.prompt_handlers.get_generation_prompt import get_generation_prompt
+from chat_logic.prompt_handlers.prompt_generation import get_generation_prompt
 from utils.logging_colors import logger
-from configs import variables, arguments
+from configs import variables
 
 # Copied from the Transformers library
 jinja_env = ImmutableSandboxedEnvironment(trim_blocks=True, lstrip_blocks=True)
@@ -52,7 +53,7 @@ def get_stopping_strings(state):
     result = [item for item in stopping_strings if not any(item.startswith(other) and item != other for other in stopping_strings)]
     result = list(set(result))
 
-    if arguments.args.verbose:
+    if variables.get_setting('verbose', False):
         logger.info("STOPPING_STRINGS=")
         pprint.PrettyPrinter(indent=4, sort_dicts=False).pprint(result)
         print()

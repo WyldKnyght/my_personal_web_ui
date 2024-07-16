@@ -1,22 +1,29 @@
-# src\user_interface\event_handlers\ui_chat_events.py 
+# src/user_interface/event_handlers/ui_chat_events.py
+
 import gradio as gr
-from chat_logic.prompt_handlers.get_available_prompts import get_available_prompts
-from chat_logic.reply_handlers.generate_chat_reply import generate_chat_reply
-from chat_logic.reply_handlers.remove_last_message import remove_last_message
 from chat_logic.common_handlers.start_new_chat import start_new_chat
-from utils.history_handlers import rename_history, delete_history
+from chat_logic.reply_handlers.reply_generation import generate_chat_reply, remove_last_message, continue_generation, regenerate_response
+from utils.history_handlers import rename_chat, delete_history, load_latest_history
 from utils.stopping_event_handler import stop_everything_event
-from utils.continue_generation import continue_generation
-from chat_logic.reply_handlers.regenerate_response import regenerate_response
-from chat_logic.common_handlers.update_chat_history import update_chat_history
-from chat_logic.prompt_handlers.load_prompt import load_prompt
+from model_handlers.load_model import load_model
+from configs import variables
 
 def setup_event_handlers(ui_elements):
+    # Load model
+    ui_elements['load_model_btn'].click(
+        load_selected_model,
+        inputs=[ui_elements['model_selector']],
+        outputs=[ui_elements['chat_display']]
+    )
+
     # Chat generation
     ui_elements['generate_btn'].click(
         generate_chat_reply,
         inputs=[ui_elements['chat_input'], ui_elements['chat_history_json'], ui_elements['mode_selector'], ui_elements['chat_style']],
-        outputs=[ui_elements['chat_display'], ui_elements['chat_history_json']]
+        outputs=[ui_elements['chat_display'], ui_elements['chat_history_json']],
+        api_name="chat_api"
+    ).then(
+        lambda: gr.update(value=""), outputs=[ui_elements['chat_input']]  # Clear the input field after sending
     )
 
     # Stop generation
@@ -50,48 +57,47 @@ def setup_event_handlers(ui_elements):
     # New chat
     ui_elements['new_chat_btn'].click(
         start_new_chat,
-        inputs=[],
+        inputs=[ui_elements['mode_selector']],
         outputs=[ui_elements['chat_display'], ui_elements['chat_history_json'], ui_elements['chat_history']]
     )
 
     # Rename chat
     ui_elements['rename_chat_btn'].click(
-        rename_history,
-        inputs=[ui_elements['chat_history'], gr.Textbox(visible=False)],  # You might want to add a visible textbox for the new name
+        rename_chat,
+        inputs=[ui_elements['chat_history'], gr.Textbox(visible=False), ui_elements['mode_selector']],
         outputs=[ui_elements['chat_history']]
     )
 
     # Delete chat
     ui_elements['delete_chat_btn'].click(
         delete_history,
-        inputs=[ui_elements['chat_history']],
+        inputs=[ui_elements['chat_history'], ui_elements['mode_selector']],
         outputs=[ui_elements['chat_history'], ui_elements['chat_display'], ui_elements['chat_history_json']]
     )
 
     # Load selected chat
     ui_elements['chat_history'].change(
-        update_chat_history,
-        inputs=[ui_elements['chat_history']],
+        load_latest_history,
+        inputs=[ui_elements['mode_selector']],
         outputs=[ui_elements['chat_display'], ui_elements['chat_history_json']]
     )
 
-    # Load selected prompt
-    ui_elements['prompt_menu'].change(
-        load_prompt,
-        inputs=[ui_elements['prompt_menu']],
-        outputs=[ui_elements['chat_input']]
-    )
-
-    # Refresh prompts
-    ui_elements['refresh_prompts_btn'].click(
-        lambda: gr.update(choices=get_available_prompts()),
-        inputs=[],
-        outputs=[ui_elements['prompt_menu']]
-    )
-
-    # You might also want to add a handler for the chat input for sending messages with the Enter key
+    # Chat input for sending messages with the Enter key
     ui_elements['chat_input'].submit(
         generate_chat_reply,
         inputs=[ui_elements['chat_input'], ui_elements['chat_history_json'], ui_elements['mode_selector'], ui_elements['chat_style']],
         outputs=[ui_elements['chat_display'], ui_elements['chat_history_json'], ui_elements['chat_input']]
     )
+    
+def load_selected_model(model_name):
+    try:
+        model = load_model(model_name)
+        variables.model = model
+        variables.model_settings = variables.settings.copy()
+        return gr.update(value=f"Model '{model_name}' loaded successfully.")
+    except Exception as e:
+        return gr.update(value=f"Error loading model: {str(e)}")
+
+# Update these functions to work with the GGUF model
+for func in [generate_chat_reply, continue_generation, regenerate_response]:
+    func.__globals__['model'] = variables.model
