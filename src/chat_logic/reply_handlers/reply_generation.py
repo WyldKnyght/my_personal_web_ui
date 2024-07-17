@@ -1,11 +1,11 @@
 # src/chat_logic/reply_handlers/reply_generation.py
 
 import json
-from configs import variables
+import html
 from chat_logic.prompt_handlers.prompt_generation import prepare_prompt
 from chat_logic.common_handlers.update_chat_display import update_chat_display
-import html
 from utils.logging_colors import logger
+from config import model_parameters
 
 def remove_last_message(history):
     if len(history['visible']) > 0 and history['internal'][-1][0] != '<|BEGIN-VISIBLE-CHAT|>':
@@ -18,7 +18,7 @@ def remove_last_message(history):
 
 
 def generate_chat_reply(user_input, chat_history_json, mode, chat_style):
-    model = variables.model  # Get the model from the variables module
+    model = model_parameters.model  # Get the model from the variables module
     
     if model is None:
         raise ValueError("Model is not initialized. Please load a model first.")
@@ -54,8 +54,8 @@ def generate_chat_reply(user_input, chat_history_json, mode, chat_style):
     return chat_display, json.dumps(chat_history)
 
 def continue_generation(chat_history_json, mode, chat_style):
-    model = variables.model
-    tokenizer = variables.tokenizer
+    model = model_parameters.model
+    tokenizer = model_parameters.tokenizer
 
     try:
         chat_history = json.loads(chat_history_json) if chat_history_json else {"internal": [], "visible": []}
@@ -86,8 +86,8 @@ def continue_generation(chat_history_json, mode, chat_style):
     return update_chat_display(chat_history), chat_history_json
 
 def regenerate_response(chat_history_json, mode, chat_style):
-    model = variables.model
-    tokenizer = variables.tokenizer
+    model = model_parameters.model
+    tokenizer = model_parameters.tokenizer
     
     try:
         chat_history = json.loads(chat_history_json) if chat_history_json else {"internal": [], "visible": []}

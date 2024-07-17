@@ -2,13 +2,15 @@
 import sys
 import signal
 import gradio as gr
+
 import accelerate  # This early import makes Intel GPUs happy
 
-from configs import variables
-from utils.logging_colors import logger
 from user_interface.ui_chat import create_ui
 from user_interface.event_handlers.ui_chat_events import setup_event_handlers
-from model_handlers.load_model import load_model
+from model.loaders.model_loader import load_model
+from config import model_parameters
+from config.model_parameters import model_settings
+from utils.logging_colors import logger
 
 def signal_handler(sig, frame):
     logger.info("Received Ctrl+C. Shutting down Text generation web UI gracefully.")
@@ -19,14 +21,14 @@ signal.signal(signal.SIGINT, signal_handler)
 def main():
     try:
         # Load the GGUF model
-        model_name = variables.get_setting('model_name', 'codellama-7b-python.Q4_K_M.gguf')
+        model_name = model_parameters.get_setting('model_name')
         model = load_model(model_name)
         
         if model is None:
             raise ValueError(f"Failed to load model: {model_name}")
 
-        variables.model = model
-        variables.model_settings = variables.settings.copy()  # Assuming settings are updated in load_model
+        model_parameters.model = model
+        model_parameters.model_settings = model_settings
 
         logger.info("Creating UI elements...")
         with gr.Blocks() as demo:
@@ -44,9 +46,9 @@ def main():
                 raise
 
         # Launch the Gradio interface
-        server_name = variables.get_setting('server_name', '0.0.0.0')
-        server_port = variables.get_setting('server_port', 7860)
-        share = variables.get_setting('share', False)
+        server_name = '0.0.0.0'
+        server_port = 7860
+        share = False
 
         logger.info(f"Launching Gradio interface on {server_name}:{server_port}")
         demo.launch(

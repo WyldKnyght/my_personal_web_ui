@@ -5,12 +5,11 @@ from functools import partial
 import numpy as np
 import torch
 
-from configs import variables
-from .callbacks import Iteratorize
-from .llama_cpp_python_hijack import llama_cpp_lib
+from .handlers.callbacks import Iteratorize
+from .loaders.llama_cpp_python_hijack import llama_cpp_lib
 from utils.logging_colors import logger
-from .get_max_prompt_length import get_max_prompt_length
-
+from .handlers.get_max_prompt_length import get_max_prompt_length
+from config import model_parameters, ui_settings
 
 def ban_eos_logits_processor(eos_token, input_ids, logits):
     logits[eos_token] = -float('inf')
@@ -49,7 +48,7 @@ class LlamaCppModel:
 
         result = cls()
         cache_capacity = 0
-        cache_capacity_setting = variables.get_setting('cache_capacity')
+        cache_capacity_setting = model_parameters.get_setting('cache_capacity')
         if cache_capacity_setting is not None:
             if 'GiB' in cache_capacity_setting:
                 cache_capacity = int(re.sub('[a-zA-Z]', '', cache_capacity_setting)) * 1000 * 1000 * 1000
@@ -61,34 +60,34 @@ class LlamaCppModel:
         if cache_capacity > 0:
             logger.info(f"Cache capacity is {cache_capacity} bytes")
 
-        tensor_split = variables.get_setting('tensor_split', '').strip()
+        tensor_split = model_parameters.get_setting('tensor_split', '').strip()
         tensor_split_list = [float(x) for x in tensor_split.split(",")] if tensor_split else None
 
         params = {
             'model_path': str(path),
-            'n_ctx': variables.get_setting('n_ctx', 2048),
-            'n_threads': variables.get_setting('threads') or None,
-            'n_threads_batch': variables.get_setting('threads_batch') or None,
-            'n_batch': variables.get_setting('n_batch', 512),
-            'use_mmap': not variables.get_setting('no_mmap', False),
-            'use_mlock': variables.get_setting('mlock', False),
-            'mul_mat_q': not variables.get_setting('no_mul_mat_q', False),
-            'numa': variables.get_setting('numa', False),
-            'n_gpu_layers': variables.get_setting('n_gpu_layers', 0),
-            'rope_freq_base': variables.get_setting('rope_freq_base', 10000),
+            'n_ctx': model_parameters.get_setting('n_ctx', 2048),
+            'n_threads': model_parameters.get_setting('n_threads') or None,
+            'n_threads_batch': model_parameters.get_setting('n_threads_batch') or None,
+            'n_batch': model_parameters.get_setting('n_batch', 512),
+            'use_mmap': model_parameters.get_setting('use_mmap', False),
+            'use_mlock': model_parameters.get_setting('mlock', False),
+            'mul_mat_q': model_parameters.get_setting('mul_mat_q', True),
+            'numa': model_parameters.get_setting('numa', False),
+            'n_gpu_layers': model_parameters.get_setting('n_gpu_layers', 0),
+            'rope_freq_base': model_parameters.get_setting('rope_freq_base', 10000),
             'tensor_split': tensor_split_list,
-            'rope_freq_scale': 1.0 / variables.get_setting('compress_pos_emb', 1.0),
-            'offload_kqv': not variables.get_setting('no_offload_kqv', False),
-            'split_mode': 2 if variables.get_setting('row_split', False) else 1,
-            'flash_attn': variables.get_setting('flash_attn', False)
+            'rope_freq_scale': 1.0 / model_parameters.get_setting('compress_pos_emb', 1.0),
+            'offload_kqv': not model_parameters.get_setting('no_offload_kqv', False),
+            'split_mode': 2 if model_parameters.get_setting('row_split', False) else 1,
+            'flash_attn': model_parameters.get_setting('flash_attn', False)
         }
 
         logger.info(f"Initializing model with parameters: {params}")
 
-        if variables.get_setting('cache_4bit', False):
+        if model_parameters.get_setting('cache_4bit', False):
             params["type_k"] = 2
             params["type_v"] = 2
-        elif variables.get_setting('cache_8bit', False):
+        elif model_parameters.get_setting('cache_8bit', False):
             params["type_k"] = 8
             params["type_v"] = 8
 
@@ -167,7 +166,7 @@ class LlamaCppModel:
 
         output = ""
         for completion_chunk in completion_chunks:
-            if variables.stop_everything:
+            if ui_settings.stop_everything:
                 break
 
             text = completion_chunk['choices'][0]['text']

@@ -1,11 +1,10 @@
 import contextlib
 import importlib
 from typing import Sequence
-
 from tqdm import tqdm
 
-from configs import variables
-from .cache_utils import process_llamacpp_cache
+from model.handlers.cache_utils import process_llamacpp_cache
+from config import model_parameters
 
 imported_module = None
 
@@ -14,13 +13,13 @@ def llama_cpp_lib():
 
     return_lib = None
 
-    if variables.get_setting('use_cpu', True):
+    if model_parameters.get_setting('use_cpu', True):
         if imported_module and imported_module != 'llama_cpp':
             raise Exception(f"Cannot import 'llama_cpp' because '{imported_module}' is already imported. See issue #1575 in llama-cpp-python. Please restart the server before attempting to use a different version of llama-cpp-python.")
         with contextlib.suppress(Exception):
             return_lib = importlib.import_module('llama_cpp')
             imported_module = 'llama_cpp'
-    if variables.get_setting('tensorcores', False) and return_lib is None:
+    if model_parameters.get_setting('tensorcores', False) and return_lib is None:
         if imported_module and imported_module != 'llama_cpp_cuda_tensorcores':
             raise Exception(f"Cannot import 'llama_cpp_cuda_tensorcores' because '{imported_module}' is already imported. See issue #1575 in llama-cpp-python. Please restart the server before attempting to use a different version of llama-cpp-python.")
         with contextlib.suppress(Exception):
@@ -32,7 +31,7 @@ def llama_cpp_lib():
         with contextlib.suppress(Exception):
             return_lib = importlib.import_module('llama_cpp_cuda')
             imported_module = 'llama_cpp_cuda'
-    if return_lib is None and not variables.get_setting('use_cpu', True):
+    if return_lib is None and not model_parameters.get_setting('use_cpu', True):
         if imported_module and imported_module != 'llama_cpp':
             raise Exception(f"Cannot import 'llama_cpp' because '{imported_module}' is already imported. See issue #1575 in llama-cpp-python. Please restart the server before attempting to use a different version of llama-cpp-python.")
         with contextlib.suppress(Exception):
@@ -91,7 +90,7 @@ def monkey_patch_llama_cpp_python(lib):
         return
 
     def my_generate(self, *args, **kwargs):
-        if variables.get_setting('streaming_llm', False):
+        if model_parameters.get_setting('streaming_llm', False):
             new_sequence = args[0]
             past_sequence = self._input_ids
 

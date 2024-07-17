@@ -5,8 +5,8 @@ from chat_logic.common_handlers.start_new_chat import start_new_chat
 from chat_logic.reply_handlers.reply_generation import generate_chat_reply, remove_last_message, continue_generation, regenerate_response
 from utils.history_handlers import rename_chat, delete_history, load_latest_history
 from utils.stopping_event_handler import stop_everything_event
-from model_handlers.load_model import load_model
-from configs import variables
+from model.loaders.model_loader import load_model
+from config import model_parameters
 
 def setup_event_handlers(ui_elements):
     # Load model
@@ -92,12 +92,12 @@ def setup_event_handlers(ui_elements):
 def load_selected_model(model_name):
     try:
         model = load_model(model_name)
-        variables.model = model
-        variables.model_settings = variables.settings.copy()
+        model_parameters.model = model
+        model_parameters.model_settings = model_parameters.settings.copy()
         return gr.update(value=f"Model '{model_name}' loaded successfully.")
     except Exception as e:
         return gr.update(value=f"Error loading model: {str(e)}")
 
 # Update these functions to work with the GGUF model
 for func in [generate_chat_reply, continue_generation, regenerate_response]:
-    func.__globals__['model'] = variables.model
+    func.__globals__['model'] = model_parameters.model

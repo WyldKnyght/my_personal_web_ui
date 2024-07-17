@@ -1,6 +1,6 @@
 import logging
 
-logger = logging.getLogger('text-generation-webui')
+logger = logging.getLogger('My Personal WebUI')
 
 
 def setup_logging():

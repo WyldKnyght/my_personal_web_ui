@@ -6,36 +6,36 @@ import transformers
 from transformers import is_torch_npu_available, is_torch_xpu_available
 from queue import Queue
 from threading import Thread
-from configs import variables
+from config import model_parameters, ui_settings
 
 class StopNowException(Exception):
+    """Custom exception to signal the need to stop iteration."""
     pass
 
-
 class _StopEverythingStoppingCriteria(transformers.StoppingCriteria):
+    """Custom stopping criteria that stops when ui_settings.stop_everything is True."""
+
     def __init__(self):
-        transformers.StoppingCriteria.__init__(self)
+        super().__init__()
 
     def __call__(self, input_ids: torch.LongTensor, _scores: torch.FloatTensor) -> bool:
-        return variables.stop_everything
-
+        return ui_settings.stop_everything
 
 class Stream(transformers.StoppingCriteria):
+    """Custom stopping criteria that calls a callback function on each step."""
+
     def __init__(self, callback_func=None):
+        super().__init__()
         self.callback_func = callback_func
 
     def __call__(self, input_ids, scores) -> bool:
         if self.callback_func is not None:
             self.callback_func(input_ids[0])
-
         return False
 
-
 class Iteratorize:
-
     """
-    Transforms a function that takes a callback
-    into a lazy iterator (generator).
+    Transforms a function that takes a callback into a lazy iterator (generator).
 
     Adapted from: https://stackoverflow.com/a/9969000
     """
@@ -50,13 +50,13 @@ class Iteratorize:
         self.stop_now = False
 
         def _callback(val):
-            if self.stop_now or variables.stop_everything:
+            if self.stop_now or ui_settings.stop_everything:
                 raise StopNowException
             self.q.put(val)
 
         def gentask():
             try:
-                ret = self.mfunc(callback=_callback, *args, **self.kwargs)
+                ret = self.mfunc(callback=_callback, *self.args, **self.kwargs)
             except StopNowException:
                 pass
             except Exception:
@@ -89,10 +89,10 @@ class Iteratorize:
         self.stop_now = True
         clear_torch_cache()
 
-
 def clear_torch_cache():
+    """Clears the PyTorch cache."""
     gc.collect()
-    if not variables.get_setting('use_cpu', True):  # Default to True (CPU)
+    if not model_parameters.get_setting('n_gpu_layers'):
         if is_torch_xpu_available():
             torch.xpu.empty_cache()
         elif is_torch_npu_available():

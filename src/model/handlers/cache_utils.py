@@ -1,6 +1,6 @@
 import torch
 from numba import njit
-from configs import variables
+from config import model_parameters
 
 def process_llamacpp_cache(model, new_sequence, past_sequence):
     if len(past_sequence) == 0 or len(new_sequence) == 0:
@@ -15,7 +15,7 @@ def process_llamacpp_cache(model, new_sequence, past_sequence):
     past_sequence = torch.tensor(past_sequence)
 
     prefix_length = find_prefix_length(past_sequence[:i1], new_sequence[:j1])
-    sink_length = max(prefix_length, variables.get_setting('attention_sink_size', 5))
+    sink_length = max(prefix_length, model_parameters.get_setting('attention_sink_size', 5))
     removed_length = i1 - sink_length
 
     if removed_length <= 0:
@@ -27,9 +27,9 @@ def process_llamacpp_cache(model, new_sequence, past_sequence):
     added_chunk = new_sequence[j2 + 1:]
 
     print()
-    print('MATCHING PREFIX=', repr(variables.tokenizer.decode(matching_prefix)))
-    print('ADDED CHUNK=', repr(variables.tokenizer.decode(added_chunk)))
-    print('REMOVED CHUNK=', repr(variables.tokenizer.decode(removed_chunk)))
+    print('MATCHING PREFIX=', repr(model_parameters.tokenizer.decode(matching_prefix)))
+    print('ADDED CHUNK=', repr(model_parameters.tokenizer.decode(added_chunk)))
+    print('REMOVED CHUNK=', repr(model_parameters.tokenizer.decode(removed_chunk)))
     print('REMOVED LENGTH=', removed_length)
     print()
 

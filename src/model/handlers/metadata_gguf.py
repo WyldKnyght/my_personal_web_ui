@@ -1,4 +1,5 @@
 # metadata_gguf.py
+import contextlib
 import struct
 from enum import IntEnum
 
@@ -52,10 +53,8 @@ def get_single(value_type, file):
     if value_type == GGUFValueType.STRING:
         value_length = struct.unpack("<Q", file.read(8))[0]
         value = file.read(value_length)
-        try:
+        with contextlib.suppress(Exception):
             value = value.decode('utf-8')
-        except:
-            pass
     else:
         type_str = _simple_value_packing.get(value_type)
         bytes_length = value_type_info.get(value_type)
@@ -75,7 +74,7 @@ def load_metadata(fname):
         if GGUF_VERSION == 1:
             raise Exception('You are using an outdated GGUF, please download a new one.')
 
-        for i in range(kv_data_count):
+        for _ in range(kv_data_count):
             key_length = struct.unpack("<Q", file.read(8))[0]
             key = file.read(key_length)
 

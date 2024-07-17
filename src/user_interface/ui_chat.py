@@ -1,7 +1,7 @@
 # src/user_interface/ui_chat.py
 from pathlib import Path
 import gradio as gr
-from configs import variables
+from config import model_parameters
 
 def create_ui():
     with gr.Tab('Chat', elem_id='chat-tab'):
@@ -26,7 +26,7 @@ def create_ui():
                     chat_style = gr.Dropdown(choices=['cai-chat', 'llama-2-chat'], label='Chat style', value='cai-chat', elem_id='chat-style')
 
             with gr.Column(scale=1):
-                model_selector = gr.Dropdown(choices=list_gguf_models(), label='Model', value=variables.get_setting('model_name'), elem_id='model-selector')
+                model_selector = gr.Dropdown(choices=list_gguf_models(), label='Model', value=model_parameters.get_setting('model_name'), elem_id='model-selector')
                 load_model_btn = gr.Button('Load Model', elem_id='load-model-btn')
 
                 with gr.Row():
@@ -61,5 +61,5 @@ def create_ui():
     }
 
 def list_gguf_models():
-    models_dir = Path(variables.get_setting('models_directory', 'models'))
+    models_dir = Path(model_parameters.get_setting('models_directory', 'models'))
     return [f.stem for f in models_dir.glob('*.gguf') if f.is_file()]

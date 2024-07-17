@@ -1,6 +1,6 @@
 # src/chat_logic/prompt_handlers/prompt_generation.py
 
-from configs import variables
+from config import ui_settings
 
 def prepare_prompt(chat_history, new_message, mode, chat_style):
     if mode == 'instruct':
@@ -11,17 +11,30 @@ def prepare_prompt(chat_history, new_message, mode, chat_style):
         return prepare_chat_prompt(chat_history, new_message, chat_style)
 
 def prepare_instruct_prompt(message):
-    instruction_template = variables.settings.get('instruction_template', "Below is an instruction that describes a task. Write a response that appropriately completes the request.\n\n### Instruction:\n{instruction}\n\n### Response:")
+    instruction_template = ui_settings['instruction_template']
+    default_template = (
+        "Below is an instruction that describes a task. "
+        "Write a response that appropriately completes the request.\n\n"
+        "### Instruction:\n{instruction}\n\n### Response:"
+    )
     return instruction_template.format(instruction=message)
 
 def prepare_chat_instruct_prompt(chat_history, new_message, chat_style):
-    chat_instruct_template = variables.settings.get('chat_instruct_template', "Below is a conversation between a user and an AI assistant. Write the next response that appropriately continues the conversation.\n\n{chat_history}\n\nUser: {new_message}\n\nAssistant:")
+    chat_instruct_template = ui_settings['chat_instruct_template']
+    default_template = (
+        "Below is a conversation between a user and an AI assistant. "
+        "Write the next response that appropriately continues the conversation.\n\n"
+        "{chat_history}\n\nUser: {new_message}\n\nAssistant:"
+    )
     
     chat_history_str = format_chat_history(chat_history, chat_style)
     return chat_instruct_template.format(chat_history=chat_history_str, new_message=new_message)
 
 def prepare_chat_prompt(chat_history, new_message, chat_style):
-    chat_template = variables.settings.get('chat_template', "{chat_history}\nUser: {new_message}\nAssistant:")
+    chat_template = ui_settings['chat_template']
+    default_template = (
+        "{chat_history}\nUser: {new_message}\nAssistant:"
+    )
     
     chat_history_str = format_chat_history(chat_history, chat_style)
     return chat_template.format(chat_history=chat_history_str, new_message=new_message)

@@ -5,13 +5,13 @@ from functools import partial
 from jinja2.sandbox import ImmutableSandboxedEnvironment
 from chat_logic.prompt_handlers.prompt_generation import get_generation_prompt
 from utils.logging_colors import logger
-from configs import variables
+from config import model_parameters
 
 # Copied from the Transformers library
 jinja_env = ImmutableSandboxedEnvironment(trim_blocks=True, lstrip_blocks=True)
 
 def stop_everything_event():
-    variables.stop_everything = True
+    stop_everything = True
 
 def get_stopping_strings(state):
     stopping_strings = []
@@ -53,7 +53,7 @@ def get_stopping_strings(state):
     result = [item for item in stopping_strings if not any(item.startswith(other) and item != other for other in stopping_strings)]
     result = list(set(result))
 
-    if variables.get_setting('verbose', False):
+    if model_parameters.get_setting('verbose', False):
         logger.info("STOPPING_STRINGS=")
         pprint.PrettyPrinter(indent=4, sort_dicts=False).pprint(result)
         print()

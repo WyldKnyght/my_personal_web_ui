@@ -3,7 +3,25 @@ import os
 import json
 from pathlib import Path
 from utils.logging_colors import logger
+import yaml
+from config.model_parameters import TEMPLATES_DIR
 
+def load_instruction_template(template):
+    template_path = Path(TEMPLATES_DIR) / f'{template}.yaml'
+    if template == 'None' or not template_path.exists():
+        return ''
+    data = load_yaml_file(template_path)
+    return data.get('instruction_template', '')
+
+def get_model_path_and_file(model_name, file_pattern, models_dir):
+    model_path = models_dir / model_name
+    model_file = next(model_path.glob(file_pattern), None)
+    return model_path, model_file
+
+def load_yaml_file(file_path):
+    with open(file_path, 'r', encoding='utf-8') as file:
+        return yaml.safe_load(file)
+    
 def get_history_file_path(unique_id, mode):
     valid_modes = ['chat', 'chat-instruct', 'instruct']
     if mode not in valid_modes:
